@@ -1,0 +1,3 @@
+/* Login page high-level styles */
+.login-card { @apply max-w-md mx-auto mt-24 bg-white p-8 rounded shadow-lg; }
+.oauth-btn { @apply w-full p-3 rounded text-white text-center; }

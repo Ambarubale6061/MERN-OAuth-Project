@@ -1,0 +1,4 @@
+/* Dashboard page */
+.top-banner { @apply overflow-x-auto py-3; }
+.search-section { @apply mt-6; }
+.results-grid img { @apply w-full h-48 object-cover rounded; }

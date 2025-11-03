@@ -1,0 +1,16 @@
+/* ✅ Imports must be first */
+@import "./styles/index.css";
+@import "./styles/login.css";
+@import "./styles/dashboard.css";
+@import "./styles/history.css";
+@import "./styles/components.css";
+
+/* ✅ Then Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ✅ Then your custom CSS */
+body {
+  font-family: "Inter", sans-serif;
+}
