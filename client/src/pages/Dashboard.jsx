@@ -5,8 +5,6 @@ import TopBanner from "../components/TopBanner";
 
 const Dashboard = () => {
   const navigate = useNavigate();
-
-  // ✅ Correct API base port (same as backend)
   const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5001";
 
   const [user, setUser] = useState(null);
@@ -43,15 +41,13 @@ const Dashboard = () => {
   };
 
   // ✅ Search Unsplash images
-  const handleSearch = async (e) => {
-    e.preventDefault();
-    if (!term.trim()) return;
-
+  const performSearch = async (searchTerm) => {
+    if (!searchTerm.trim()) return;
     try {
       setLoading(true);
       const res = await axios.post(
         `${API_BASE}/api/search`,
-        { term },
+        { term: searchTerm },
         { withCredentials: true }
       );
       setResults(res.data.results || []);
@@ -63,6 +59,17 @@ const Dashboard = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    e.preventDefault();
+    performSearch(term);
+  };
+
+  // ✅ Handle trending term click
+  const handleSelectTerm = (selectedTerm) => {
+    setTerm(selectedTerm);
+    performSearch(selectedTerm);
+  };
+
   // ✅ Select/unselect image
   const toggleSelect = (id) => {
     setSelected((prev) =>
@@ -70,7 +77,6 @@ const Dashboard = () => {
     );
   };
 
-  // ✅ Loading before user fetched
   if (!user)
     return (
       <div className="flex items-center justify-center h-screen bg-gray-100">
@@ -105,9 +111,9 @@ const Dashboard = () => {
         </button>
       </header>
 
-      {/* MAIN SECTION */}
+      {/* MAIN */}
       <main className="flex-1 p-6">
-        <TopBanner />
+        <TopBanner onSelectTerm={handleSelectTerm} />
 
         {/* Search Form */}
         <form

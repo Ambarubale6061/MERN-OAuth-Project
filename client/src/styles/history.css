@@ -1,3 +1,47 @@
-/* History page */
-.history-card { @apply max-w-2xl mx-auto bg-white p-4 rounded shadow; }
-.history-item { @apply flex justify-between border-b py-2; }
+/* 📜 Modern History Page Styles */
+
+/* Main Card Container */
+.history-card {
+  @apply max-w-3xl mx-auto bg-white/40 backdrop-blur-md p-6 rounded-2xl shadow-lg mt-8 border border-white/30;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Header */
+.history-card h3 {
+  @apply text-2xl font-semibold text-gray-800 mb-4 flex items-center justify-center gap-2;
+}
+
+/* Individual History Item */
+.history-item {
+  @apply flex justify-between items-center border-b border-gray-200 py-3 px-2 rounded-md transition-all duration-300;
+}
+.history-item:hover {
+  @apply bg-indigo-50/70 shadow-sm scale-[1.01];
+}
+
+/* Search Term Text */
+.history-item span:first-child {
+  @apply font-medium text-gray-800 truncate;
+}
+
+/* Timestamp */
+.history-item span:last-child {
+  @apply text-xs text-gray-500 italic;
+}
+
+/* Empty State */
+.history-empty {
+  @apply text-center mt-10 text-gray-500 italic;
+}
+
+/* ✨ Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

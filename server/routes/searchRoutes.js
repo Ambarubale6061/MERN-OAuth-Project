@@ -3,14 +3,15 @@ const router = express.Router();
 const axios = require("axios");
 const Search = require("../models/Search");
 
-// allow public search for quick testing by setting PUBLIC_SEARCH=true in .env
+// ✅ Middleware - user login check
 function ensureAuth(req, res, next) {
+  // PUBLIC_SEARCH=true असेल तर login शिवाय search चालेल (testing साठी useful)
   if (process.env.PUBLIC_SEARCH === "true") return next();
   if (req.user) return next();
   return res.status(401).json({ error: "Not authenticated" });
 }
 
-// GET /api/search?query=flowers
+// ✅ GET /api/search?query=nature
 router.get("/search", ensureAuth, async (req, res) => {
   try {
     const query = (req.query.query || "").trim();
@@ -18,20 +19,20 @@ router.get("/search", ensureAuth, async (req, res) => {
 
     console.log("🔍 Searching Unsplash for:", query);
 
+    // ✅ Unsplash API request
     const response = await axios.get("https://api.unsplash.com/search/photos", {
-      params: { query, per_page: 20 },
+      params: {
+        query,
+        per_page: 24, // अधिक images
+        orientation: "landscape",
+      },
       headers: {
         Authorization: `Client-ID ${process.env.UNSPLASH_ACCESS_KEY}`,
       },
       timeout: 10000,
     });
 
-    console.log(
-      "📸 Unsplash returned:",
-      (response.data.results || []).length,
-      "items"
-    );
-
+    // ✅ Results map
     const results = (response.data.results || []).map((img) => ({
       id: img.id,
       thumb: img.urls.small,
@@ -40,30 +41,32 @@ router.get("/search", ensureAuth, async (req, res) => {
       width: img.width,
       height: img.height,
       link: img.links.html,
-      photographer: img.user?.name || "",
+      photographer: img.user?.name || "Unknown",
+      profile: img.user?.links?.html || "",
     }));
 
-    // Save term if user present (non-blocking)
+    // ✅ Search term DB मध्ये store करायचा (non-blocking)
     if (req.user && req.user._id) {
-      try {
-        await Search.create({ user: req.user._id, term: query });
-      } catch (e) {
-        console.warn("Could not save search term:", e.message || e);
-      }
+      Search.create({ user: req.user._id, term: query }).catch((e) =>
+        console.warn("⚠️ Could not save search term:", e.message)
+      );
     }
 
-    res.json({ total: response.data.total || 0, results });
+    // ✅ response पाठव
+    res.json({
+      total: response.data.total || results.length,
+      results,
+    });
   } catch (err) {
     console.error("❌ Unsplash API error:", err.response?.data || err.message);
-    const status = err.response?.status || 500;
-    res.status(500).json({
+    res.status(err.response?.status || 500).json({
       error: "Image search failed",
       detail: err.response?.data || err.message,
     });
   }
 });
 
-// top-searches unchanged
+// ✅ GET /api/top-searches
 router.get("/top-searches", async (req, res) => {
   try {
     const agg = await Search.aggregate([

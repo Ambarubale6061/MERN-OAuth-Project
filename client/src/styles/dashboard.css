@@ -1,4 +1,48 @@
-/* Dashboard page */
-.top-banner { @apply overflow-x-auto py-3; }
-.search-section { @apply mt-6; }
-.results-grid img { @apply w-full h-48 object-cover rounded; }
+/* 🌈 Modern Dashboard Page Styles */
+
+/* 🔥 Top Trending Banner */
+.top-banner {
+  @apply relative overflow-x-auto py-3 px-4 bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500 text-white rounded-2xl shadow-xl mb-6;
+  animation: fadeIn 1s ease-in-out;
+}
+.top-banner h2 {
+  @apply text-center text-lg font-semibold tracking-wide;
+}
+.top-banner span {
+  @apply bg-white/20 backdrop-blur-sm px-3 py-1 rounded-full text-sm 
+  hover:bg-white/30 cursor-pointer transition-transform hover:scale-105;
+}
+
+/* 🔍 Search Section */
+.search-section {
+  @apply mt-8 bg-white/40 backdrop-blur-md rounded-2xl p-6 shadow-lg;
+  transition: all 0.3s ease;
+}
+.search-section:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(99, 102, 241, 0.3);
+}
+
+/* 🖼️ Results Grid */
+.results-grid {
+  @apply grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 mt-8;
+}
+.results-grid img {
+  @apply w-full h-48 object-cover rounded-xl shadow-md hover:scale-105 transition-transform duration-300 ease-in-out;
+  filter: brightness(0.9);
+}
+.results-grid img:hover {
+  filter: brightness(1.05);
+}
+
+/* ✨ Animations */
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
